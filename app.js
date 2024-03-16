@@ -17,6 +17,9 @@ const winPatterns = [
     [ 6, 7, 8 ]
 ];
 
+
+
+
 const resetGame = () => {
     turnO =true;
     enableBtns();
@@ -55,11 +58,52 @@ const enableBtns = () => {
     }
 };
 
+//--------------------------------- confetti ----------------
+
+const triggerConfetti = () => {
+
+    const duration = 5 * 1000,
+        animationEnd = Date.now() + duration,
+        defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+
+        // since particles fall down, start a bit higher than random
+        confetti(
+            Object.assign({}, defaults, {
+                particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            })
+        );
+        confetti(
+            Object.assign({}, defaults, {
+                particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            })
+        );
+    }, 250);
+
+
+    console.log("confetti");
+}; 
+//----------------------------------confetti Ends ---------------
 const showWinner = (winner) => {
     msg.innerText = `Congratulations! ${winner} wins!` ;
     msgContainer.classList.remove( "hide" );
     disableBtns();
     resetBtn.classList.add("hide");
+    triggerConfetti();
 };
 const showTie = () => {
     msg.innerText = `It was a TIE! ` ;
